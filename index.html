@@ -1,0 +1,678 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Happy Birthday ❤️</title>
+<meta name="description" content="A personalized happy birthday page with animations and confetti." />
+<style>
+  :root{
+    --bg:#0f1724;
+    --card:#0b1220;
+    --accent:#ff5c8a;
+    --accent-2:#ffd166;
+    --muted: #9aa4b2;
+    --glass: rgba(255,255,255,0.04);
+    --radius: 18px;
+    --shadow: 0 10px 30px rgba(2,6,23,0.6);
+    font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    background:
+      radial-gradient(1000px 600px at 10% 10%, rgba(255,92,138,0.06), transparent 8%),
+      radial-gradient(900px 500px at 90% 90%, rgba(255,209,102,0.04), transparent 8%),
+      var(--bg);
+    color:#e6eef6;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px;
+  }
+
+  .card{
+    width:min(980px, 96%);
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    display:grid;
+    grid-template-columns: 1fr 420px;
+    gap:0;
+    min-height:520px;
+  }
+
+  /* left side */
+  .hero{
+    padding:40px;
+    display:flex;
+    flex-direction:column;
+    gap:22px;
+    position:relative;
+    background:
+      linear-gradient(135deg, rgba(255,255,255,0.01), rgba(0,0,0,0.02));
+  }
+
+  .topline{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:space-between;
+  }
+  .logo{
+    display:flex;
+    gap:10px;
+    align-items:center;
+    font-weight:600;
+    letter-spacing:0.2px;
+  }
+  .logo .dot{
+    width:12px;height:12px;border-radius:50%;
+    background: linear-gradient(180deg,var(--accent),#ff2d6f);
+    box-shadow:0 4px 14px rgba(255,92,138,0.25), inset 0 -2px 6px rgba(0,0,0,0.2);
+  }
+
+  h1{
+    margin:0;
+    font-size:32px;
+    line-height:1.02;
+    letter-spacing:-0.3px;
+  }
+
+  .subtitle{
+    color:var(--muted);
+    margin-top:6px;
+    font-size:15px;
+  }
+
+  .typewriter{
+    font-size:26px;
+    font-weight:700;
+    margin:6px 0 0 0;
+    white-space:pre-wrap;
+    max-width:100%;
+    line-height:1.05;
+  }
+
+  .desc{
+    color:var(--muted);
+    margin-top:8px;
+    font-size:15px;
+    max-width:58ch;
+  }
+
+  .actions{
+    display:flex;
+    gap:12px;
+    margin-top:18px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+
+  button.btn{
+    border:0;
+    outline:0;
+    padding:12px 16px;
+    border-radius:12px;
+    font-weight:600;
+    cursor:pointer;
+    background:linear-gradient(90deg,var(--accent),#ff2d6f);
+    color:white;
+    box-shadow:0 8px 20px rgba(255,44,111,0.12);
+  }
+  button.ghost{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    color:var(--accent-2);
+    padding:10px 14px;
+    border-radius:10px;
+    cursor:pointer;
+  }
+
+  /* right column */
+  .side{
+    background:
+      linear-gradient(180deg, rgba(255,255,255,0.015), rgba(0,0,0,0.04));
+    padding:32px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+  }
+
+  .photo-frame{
+    width:320px;
+    height:320px;
+    border-radius:18px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.05));
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+    position:relative;
+    box-shadow: 0 20px 50px rgba(8,12,24,0.5);
+    border:1px solid rgba(255,255,255,0.03);
+  }
+  .photo-frame img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    display:block;
+  }
+  .photo-placeholder{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    color:var(--muted);
+  }
+  .small{
+    font-size:14px;
+    color:var(--muted);
+  }
+
+  .heart{
+    width:76px;
+    height:76px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform-origin:center;
+    transition:transform .25s ease;
+  }
+
+  .controls{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    justify-content:center;
+    margin-top:8px;
+    flex-wrap:wrap;
+  }
+
+  .meta{
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+  }
+
+  footer.tools{
+    display:flex;
+    gap:8px;
+    align-items:center;
+    justify-content:center;
+    margin-top:8px;
+    width:100%;
+  }
+
+  /* confetti canvas covers whole card */
+  canvas.confetti{
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+    z-index:8;
+  }
+
+  /* personalization modal (simple) */
+  .modal{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    background:linear-gradient(180deg, rgba(2,6,23,0.6), rgba(2,6,23,0.6));
+    z-index:60;
+  }
+  .modal.show{display:flex}
+  .modal .panel{
+    width:min(720px,94%);
+    background:var(--card);
+    border-radius:14px;
+    padding:20px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.02);
+  }
+  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:12px}
+  input[type="text"], textarea{
+    background:var(--glass);
+    border:1px solid rgba(255,255,255,0.03);
+    padding:12px 14px;
+    border-radius:10px;
+    color:inherit;
+    font-size:15px;
+    outline:none;
+  }
+  textarea{min-height:100px;resize:vertical}
+
+  /* small screens */
+  @media (max-width:920px){
+    .card{grid-template-columns:1fr; min-height:720px}
+    .photo-frame{width:86%; height:320px}
+    .side{padding:20px}
+    .hero{padding:28px}
+  }
+
+  /* reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{animation:none !important; transition:none !important}
+  }
+
+  /* subtle floating decoration */
+  .float-deco{
+    position:absolute;
+    right: -60px;
+    top: -60px;
+    opacity:0.12;
+    transform: rotate(-12deg);
+    filter:blur(6px);
+    pointer-events:none;
+  }
+
+  .pulse {
+    animation: pulse 1.6s infinite;
+  }
+  @keyframes pulse {
+    0%{transform:scale(1)}
+    50%{transform:scale(1.08)}
+    100%{transform:scale(1)}
+  }
+
+  .type-caret{
+    display:inline-block;
+    width:10px;
+    background:linear-gradient(180deg,var(--accent),#ff2d6f);
+    margin-left:6px;
+    animation: blink 1s steps(2) infinite;
+    vertical-align:middle;
+    height:1.05em;
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  .share-copy{
+    background:transparent;
+    border:1px dashed rgba(255,255,255,0.06);
+    padding:8px 12px;
+    border-radius:10px;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+</style>
+</head>
+<body>
+  <div class="card" role="region" aria-label="Birthday card">
+    <canvas class="confetti" aria-hidden="true"></canvas>
+
+    <div class="hero">
+      <div class="topline">
+        <div class="logo" aria-hidden="true">
+          <div class="dot" aria-hidden="true"></div>
+          <div style="font-size:14px">Birthday</div>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="ghost" id="personalizeBtn" aria-haspopup="dialog">Personalize</button>
+          <button class="ghost" id="printBtn">Print</button>
+        </div>
+      </div>
+
+      <div style="margin-top:6px">
+        <h1 id="greetingTitle">Happy Birthday, <span id="nameText">Love</span>!</h1>
+        <div class="subtitle" id="subtitle">Today is all about you — let's celebrate every sparkle ✨</div>
+      </div>
+
+      <div class="typewriter" id="typewriter" aria-live="polite"></div>
+
+      <p class="desc" id="longDesc">
+        You are cherished for your kindness, your laughter, and the small ways you make every day better. I’m grateful for you — for your dreams, your smile, and the love we share.
+      </p>
+
+      <div class="actions" role="group" aria-label="Card actions">
+        <button class="btn" id="celebrateBtn" title="Celebrate">Celebrate 🎉</button>
+        <button class="ghost" id="copyBtn" title="Copy message">Copy message</button>
+        <button class="ghost" id="shareBtn" title="Share">Share link</button>
+      </div>
+
+      <div style="flex:1"></div>
+
+      <div style="display:flex;gap:12px;align-items:center;justify-content:space-between">
+        <div class="meta" id="metaText">Made with love 💖</div>
+        <div style="color:var(--muted);font-size:13px">Tip: Click <strong>Personalize</strong> to change name & message.</div>
+      </div>
+    </div>
+
+    <aside class="side" aria-label="Photo and controls">
+      <div class="photo-frame" id="photoFrame" aria-hidden="true">
+        <div class="photo-placeholder">
+          <svg width="72" height="72" viewBox="0 0 24 24" fill="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 21c-4.97 0-9-4.03-9-9s4.03-9 9-9 9 4.03 9 9-4.03 9-9 9z" fill="rgba(255,255,255,0.03)"/>
+            <path d="M12 8.4a3.6 3.6 0 1 0 0 7.2 3.6 3.6 0 0 0 0-7.2z" fill="rgba(255,92,138,0.12)"/>
+            <path d="M5 17.5c1.8-2 4.2-3.2 7-3.2s5.2 1.2 7 3.2" stroke="rgba(255,255,255,0.06)" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div class="small">Add a photo for extra sparkle</div>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-direction:column;align-items:center;gap:8px">
+        <div class="heart" id="heartBtn" role="button" aria-pressed="false" tabindex="0" title="Click to send pulse">
+          <!-- Simple heart SVG -->
+          <svg viewBox="0 0 24 24" width="76" height="76" aria-hidden="true">
+            <defs><linearGradient id="g1" x1="0" x2="1" y1="0" y2="1"><stop offset="0" stop-color="#ff9fb8"/><stop offset="1" stop-color="#ff2d6f"/></linearGradient></defs>
+            <path d="M12 21s-7.5-4.7-9.3-7.1C-0.4 9.4 3.4 4 8.4 5.6 10.5 6.3 12 8 12 8s1.5-1.7 3.6-2.4c5-1.6 8.8 3.8 5.7 8.3C19.5 16.3 12 21 12 21z"
+              fill="url(#g1)" stroke="rgba(0,0,0,0.12)" stroke-width="0.6"/>
+          </svg>
+        </div>
+
+        <div class="controls">
+          <label class="share-copy" id="downloadBtn" role="button" tabindex="0">Download</label>
+          <button class="ghost" id="changePhotoBtn">Add photo</button>
+        </div>
+
+        <div class="meta">Click the heart to make it pulse 💓</div>
+      </div>
+
+      <div class="float-deco" aria-hidden="true">
+        <svg width="260" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="50" fill="#ffb3c7" opacity="0.6"/>
+          <circle cx="150" cy="150" r="50" fill="#ffd8a8" opacity="0.5"/>
+        </svg>
+      </div>
+    </aside>
+  </div>
+
+  <!-- personalization modal -->
+  <div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="panel">
+      <h3 id="modalTitle">Personalize the card</h3>
+      <div class="field">
+        <label for="nameInput">Name</label>
+        <input id="nameInput" type="text" maxlength="40" placeholder="Her name (e.g. Aisha)" />
+      </div>
+      <div class="field">
+        <label for="messageInput">Short message (what the typewriter will show)</label>
+        <input id="messageInput" type="text" maxlength="160" placeholder="I love you more every day..." />
+      </div>
+      <div class="field">
+        <label for="descInput">Longer message (description)</label>
+        <textarea id="descInput" maxlength="600" placeholder="Write a longer, heartfelt message here."></textarea>
+      </div>
+
+      <div style="display:flex;gap:8px;justify-content:flex-end">
+        <button class="ghost" id="cancelModal">Cancel</button>
+        <button class="btn" id="saveModal">Save</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+/*
+  Polished birthday page script
+  Features:
+    - Typewriter text
+    - Confetti canvas
+    - Heart pulse
+    - Personalize modal (client-side)
+    - Download screenshot (as PNG) without external libs
+    - Accessibility considerations
+*/
+
+/* ---------- Defaults (change here if you want) ---------- */
+let girlfriendName = "Love";
+let shortLines = [
+  "To the woman who lights up my life.",
+  "You make ordinary moments unforgettable.",
+  "I love you more than words can say."
+];
+let longDesc = "You are cherished for your kindness, your laughter, and the small ways you make every day better. I’m grateful for you — for your dreams, your smile, and the love we share.";
+
+/* ---------- DOM refs ---------- */
+const nameText = document.getElementById('nameText');
+const typewriterEl = document.getElementById('typewriter');
+const longDescEl = document.getElementById('longDesc');
+const personalizeBtn = document.getElementById('personalizeBtn');
+const modal = document.getElementById('modal');
+const nameInput = document.getElementById('nameInput');
+const messageInput = document.getElementById('messageInput');
+const descInput = document.getElementById('descInput');
+const saveModal = document.getElementById('saveModal');
+const cancelModal = document.getElementById('cancelModal');
+const celebrateBtn = document.getElementById('celebrateBtn');
+const confettiCanvas = document.querySelector('canvas.confetti');
+const heartBtn = document.getElementById('heartBtn');
+const photoFrame = document.getElementById('photoFrame');
+const changePhotoBtn = document.getElementById('changePhotoBtn');
+const copyBtn = document.getElementById('copyBtn');
+const printBtn = document.getElementById('printBtn');
+const downloadBtn = document.getElementById('downloadBtn');
+
+/* ---------- UI initial state ---------- */
+nameText.textContent = girlfriendName;
+longDescEl.textContent = longDesc;
+
+/* ---------- typewriter ---------- */
+let twIndex = 0, twChar = 0, twLine = 0;
+let typing = true;
+let typeInterval = null;
+function startTypewriter(){
+  const lines = shortLines.slice(); // copy
+  twLine = 0; twChar = 0; twIndex = 0;
+  typewriterEl.textContent = "";
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    typewriterEl.textContent = lines.join(' — ');
+    return;
+  }
+  function typeStep(){
+    if(twLine >= lines.length){
+      // restart after a pause
+      setTimeout(()=>{ twLine = 0; typewriterEl.textContent = ""; }, 2200);
+      return;
+    }
+    const cur = lines[twLine];
+    typewriterEl.textContent = cur.slice(0, twChar) + (twChar % 2 === 0 ? '' : '');
+    twChar++;
+    if(twChar > cur.length){
+      twChar = 0;
+      twLine++;
+      setTimeout(typeStep, 900);
+    } else {
+      setTimeout(typeStep, 40 + Math.random()*40);
+    }
+  }
+  typeStep();
+}
+startTypewriter();
+
+/* ---------- confetti ---------- */
+/* Basic but visually pleasing confetti implementation */
+const ctx = confettiCanvas.getContext('2d');
+let w = confettiCanvas.width = confettiCanvas.offsetWidth;
+let h = confettiCanvas.height = confettiCanvas.offsetHeight;
+let particles = [];
+function resizeCanvas(){
+  w = confettiCanvas.width = confettiCanvas.offsetWidth;
+  h = confettiCanvas.height = confettiCanvas.offsetHeight;
+}
+window.addEventListener('resize', resizeCanvas);
+
+function rand(min, max) { return Math.random()*(max-min)+min }
+function createParticle(x,y){
+  return {
+    x:x, y:y,
+    vx: rand(-2,2),
+    vy: rand(-6,-2),
+    r: rand(6,14),
+    rot: rand(0,Math.PI*2),
+    vr: rand(-0.1,0.1),
+    color: ['#ff5c8a','#ffd166','#7ee7c7','#9ad1ff'][Math.floor(Math.random()*4)]
+  };
+}
+
+function burst(x,y,amount=28){
+  for(let i=0;i<amount;i++) particles.push(createParticle(x,y));
+}
+
+function updateConfetti(){
+  ctx.clearRect(0,0,w,h);
+  for(let i=particles.length-1;i>=0;i--){
+    const p = particles[i];
+    p.x += p.vx;
+    p.y += p.vy;
+    p.vy += 0.12; // gravity
+    p.rot += p.vr;
+    // bounce a little
+    if(p.y > h + 40){ particles.splice(i,1); continue; }
+    ctx.save();
+    ctx.translate(p.x,p.y);
+    ctx.rotate(p.rot);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*0.7);
+    ctx.restore();
+  }
+  requestAnimationFrame(updateConfetti);
+}
+updateConfetti();
+
+/* ---------- interactions ---------- */
+celebrateBtn.addEventListener('click', (e)=>{
+  // Burst from center-left area
+  const rect = confettiCanvas.getBoundingClientRect();
+  burst(rect.width*0.25, rect.height*0.3, 38);
+  burst(rect.width*0.6, rect.height*0.2, 28);
+  burst(rect.width*0.4, rect.height*0.6, 18);
+});
+
+personalizeBtn.addEventListener('click', ()=>{
+  // show modal with current values
+  nameInput.value = girlfriendName;
+  messageInput.value = shortLines.join(' — ');
+  descInput.value = longDesc;
+  modal.classList.add('show');
+  nameInput.focus();
+});
+
+cancelModal.addEventListener('click', ()=> modal.classList.remove('show'));
+saveModal.addEventListener('click', ()=>{
+  girlfriendName = nameInput.value.trim() || girlfriendName;
+  let msg = messageInput.value.trim();
+  shortLines = msg ? msg.split(' — ').map(s=>s.trim()).filter(Boolean) : shortLines;
+  longDesc = descInput.value.trim() || longDesc;
+  // apply
+  nameText.textContent = girlfriendName;
+  longDescEl.textContent = longDesc;
+  startTypewriter();
+  modal.classList.remove('show');
+});
+
+heartBtn.addEventListener('click', pulseHeart);
+heartBtn.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' ') { e.preventDefault(); pulseHeart(); } });
+
+function pulseHeart(){
+  heartBtn.classList.add('pulse');
+  heartBtn.setAttribute('aria-pressed','true');
+  // confetti small burst near heart
+  const rect = confettiCanvas.getBoundingClientRect();
+  burst(rect.width*0.78, rect.height*0.5, 12);
+  setTimeout(()=> { heartBtn.classList.remove('pulse'); heartBtn.setAttribute('aria-pressed','false'); }, 900);
+}
+
+/* ---------- photo handling (client-side only) ---------- */
+changePhotoBtn.addEventListener('click', ()=>{
+  const inp = document.createElement('input');
+  inp.type = 'file';
+  inp.accept = 'image/*';
+  inp.onchange = ()=> {
+    const file = inp.files && inp.files[0];
+    if(!file) return;
+    const url = URL.createObjectURL(file);
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = girlfriendName + " photo";
+    // clear and append
+    photoFrame.innerHTML = '';
+    photoFrame.appendChild(img);
+  };
+  inp.click();
+});
+
+/* ---------- copy message ---------- */
+copyBtn.addEventListener('click', async ()=>{
+  const message = `Happy Birthday, ${girlfriendName}!\n\n${shortLines.join(' — ')}\n\n${longDesc}\n\nMade with love ❤️`;
+  try{
+    await navigator.clipboard.writeText(message);
+    copyBtn.textContent = 'Copied ✅';
+    setTimeout(()=> copyBtn.textContent = 'Copy message', 1600);
+  }catch(e){
+    alert('Could not copy automatically — your browser blocked clipboard. You can select and copy manually.');
+  }
+});
+
+/* ---------- print ---------- */
+printBtn.addEventListener('click', ()=> window.print());
+
+/* ---------- simple download of the card as PNG ---------- */
+/* We will draw the card element onto a canvas (approx) and download - using html2canvas would be easier but we do a lightweight approach:
+   We'll capture the visible card by drawing a simplified SVG snapshot. This is a best-effort inline solution (keeps everything client-side).
+*/
+downloadBtn.addEventListener('click', async ()=>{
+  // attempt to draw the card element using foreignObject in an SVG and convert to PNG
+  const el = document.querySelector('.card');
+  const width = el.offsetWidth;
+  const height = el.offsetHeight;
+  const clone = el.cloneNode(true);
+
+  // remove the confetti canvas and modals from clone to get a clean image
+  const conf = clone.querySelector('canvas.confetti');
+  if(conf) conf.remove();
+  const modalClone = clone.querySelector('.modal');
+  if(modalClone) modalClone.remove();
+
+  // Inline styles via computed stylesheet can be large; we will rely on basic styling.
+  const svg = `
+    <svg xmlns='http://www.w3.org/2000/svg' width='${width}' height='${height}'>
+      <foreignObject width='100%' height='100%'>
+        ${new XMLSerializer().serializeToString(clone)}
+      </foreignObject>
+    </svg>`;
+  const blob = new Blob([svg], {type: 'image/svg+xml;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const img = new Image();
+  img.onload = ()=>{
+    const canvas = document.createElement('canvas');
+    canvas.width = width*2; canvas.height = height*2;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = getComputedStyle(document.body).background || '#0f1724';
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.drawImage(img,0,0,canvas.width,canvas.height);
+    URL.revokeObjectURL(url);
+    canvas.toBlob((b)=>{
+      const a = document.createElement('a');
+      a.download = `happy-birthday-${girlfriendName.replace(/\s+/g,'_') || 'dear'}.png`;
+      a.href = URL.createObjectURL(b);
+      a.click();
+      URL.revokeObjectURL(a.href);
+    }, 'image/png');
+  };
+  img.onerror = ()=>{
+    alert('Download not supported in this browser. Try taking a screenshot or use the Print button.');
+  };
+  img.src = url;
+});
+
+/* ---------- small accessibility: close modal on escape ---------- */
+window.addEventListener('keydown', (e)=>{
+  if(e.key === 'Escape' && modal.classList.contains('show')) modal.classList.remove('show');
+});
+
+/* ---------- friendly first celebration (auto) ---------- */
+setTimeout(()=> burst(confettiCanvas.offsetWidth*0.6, confettiCanvas.offsetHeight*0.3, 40), 650);
+
+/* ---------- make canvas sized correctly on load ---------- */
+setTimeout(resizeCanvas, 120);
+</script>
+</body>
+</html>
