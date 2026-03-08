@@ -1,2 +1,2 @@
 # birthday-wish
-a best birthday wish for your girlfriend
+a best birthday wish for your Loved once
